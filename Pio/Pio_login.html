@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<title>pio-login</title>
+		<pinp name="error" default="">
+		<pinp name="loginerror" default="">
+	</head>
+
+	<body bgcolor="#ffffff">
+		<div align="center">
+			<img src="Pio_manblueeye.jpg" alt="blue eye man" border="0"><br>
+			
+			#pinp.loginerror#<br>
+			<form action="Pio_login.cgi" method="get" name="piologin">
+				<table border="0" cellspacing="3" cellpadding="0">
+					<tr>
+						<td colspan="2" align="center"><b>pio Login<br>
+								<hr noshade>
+							</b></td>
+					</tr>
+					<tr>
+						<td align="right">User:</td>
+						<td><input type="text" name="piouser" size="25" maxlength="25" border="0"></td>
+					</tr>
+					<tr>
+						<td align="right">Password:</td>
+						<td><input type="password" name="piopass" size="25" maxlength="25" border="0"></td>
+					</tr>
+					<tr>
+						<td align="right"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td align="right">Select A Page:</td>
+						<td><input type="radio" name="page" value="Pio_blogedit.html" border="0"> - Blog Editor<br>
+							<input type="radio" name="page" value="Pio_blogpage.html" border="0"> - Blog Page<br>
+						</td>
+					</tr>
+				</table>
+				<input type="hidden" name="loginpage" value="Pio_login.html" border="0"><br>
+				<br>
+				<input type="submit" name="submitbutton" value="submit" border="0"> <input type="reset" border="0">
+			</form>
+		</div>
+		<br>
+		<font size="1">note:  If you are having problems adding items to this page, you can see the cgi calls by changing the form from a post to a get. </font><br>
+		<br>
+		<!--list of pinp:
+
+#pinp.*#--><br>
+	</body>
+
+</html>

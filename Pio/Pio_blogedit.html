@@ -1,0 +1,274 @@
+<Pio_manblueeye_orig.jpg!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Blog Editor</title>
+		<pinp name="piouser" default="">
+		<pinp name="piosid" default="">
+		<pinp name="textid" default="">
+		<pinp name="subject" default="">
+		<pinp name="updatetextid" default="">
+		<pinp name="sqlbutton" default="get last 10 entries">
+		<pinp name="entrydate" default="">
+		<pinp name="status" default="">
+		<pinp name="textgroup" default="">
+		<pinp name="type" default="">
+		<pinp name="rowcount" default="10">
+		<pinp name="loginerror" default="">
+		
+	<pif stmt="if '#pinp.sqlbutton#' == 'get last 10 entries'">	
+	<pobj id="getentry" name="Pio_dbselect" rowcount="10" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" order by textid DESC</pobj>
+	</pif>
+
+	<pif stmt="if '#pinp.sqlbutton#' == 'like subject'">	
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" and subject like "%#pinp.subjectword#%" order by  textid DESC</pobj>
+	</pif>
+
+	<pif stmt="if '#pinp.sqlbutton#' == 'get entries after'">	
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" and entrydate >= "#pinp.entrydate#" order by textid DESC</pobj>
+	</pif>
+
+	<pif stmt="if '#pinp.sqlbutton#' == 'get entries before'">	
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" and entrydate <= "#pinp.entrydate#" order by textid DESC</pobj>
+	</pif>
+
+	<pif stmt="if '#pinp.sqlbutton#' == 'insert'">	
+	<pobj id="editblog" name="Pio_dbinsert" rowcount="1" vars="result">insert into piotext set piouser="#pinp.piouser#", subject="""#pinp.subject#""", entry="""#pinp.entry#""", status="#pinp.status#", textgroup="#pinp.textgroup#", type="#pinp.type#", entrydate=now()</pobj>
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" order by textid DESC</pobj>
+
+
+
+
+	</pif>
+	<pif stmt="if '#pinp.sqlbutton#' == 'get-textid'">	
+	<pobj id="gettextid" name="Pio_dbselect" rowcount="1" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp , textgroup, type from piotext where piouser="#pinp.piouser#" and textid=#pinp.updatetextid#</pobj>
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" and textid <= #pinp.updatetextid# order by textid DESC</pobj>
+	</pif>
+		
+	<pif stmt="if '#pinp.sqlbutton#' == 'update'">	
+	<pobj id="editblog" name="Pio_dbupdate" rowcount="1" vars="result">update piotext set subject="""#pinp.subject#""", entry="""#pinp.entry#""", status="#pinp.status#", textgroup="#pinp.textgroup#", type="#pinp.type#" where piouser = "#pinp.piouser#" and textid=#pinp.textid#</pobj>
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" order by textid DESC</pobj>
+	</pif>
+
+	<pif stmt="if '#pinp.sqlbutton#' == 'update_entry'">	
+	<pobj id="editblog" name="Pio_dbupdate" rowcount="1" vars="result">update piotext set subject="""#pinp.subject#""", entry="""#pinp.entry#""", status="#pinp.status#", textgroup="#pinp.textgroup#", type="#pinp.type#", entrydate=now() where piouser = "#pinp.piouser#" and textid=#pinp.textid#</pobj>
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, status, entrydate, tmstamp, textgroup, type">select textid, subject, entry, status, entrydate, tmstamp, textgroup, type from piotext where piouser="#pinp.piouser#" order by textid DESC</pobj>
+	</pif>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<b>
+			<table border="0" cellspacing="2" cellpadding="0">
+				<tr>
+					<td valign="middle">
+						<div align="center">
+							<a href="Pio_getpage.cgi?page=Pio_login.html"><input type="image" src="Pio_manblueeye_half.jpg" alt="" align="absmiddle" border="0"></a></div>
+					</td>
+					<td valign="top" width="10"></td>
+					<td>
+						<form action="Pio_login.cgi" method="post" name="piologin">
+							<table border="0" cellspacing="3" cellpadding="0">
+								<tr valign="bottom">
+									<td align="left" valign="middle">Login--</td>
+									<td align="left" valign="middle" width="4"></td>
+									<td align="left"><font size="2">User:<br>
+											<input type="text" name="piouser" value="#pinp.piouser#" size="10" maxlength="25" border="0"></font></td>
+									<td><font size="2">Password:<br>
+											<input type="password" name="piopass" size="10" maxlength="25" border="0"></font></td>
+									<td><input type="hidden" name="page" value="Pio_blogedit.html" border="0"><input type="hidden" name="loginpage" value="Pio_blogedit.html" border="0"><input type="submit" name="submitbutton" value="login" border="0"></td>
+								</tr>
+								<tr valign="bottom">
+									<td align="left" valign="middle"></td>
+									<td align="left" valign="middle" width="4"></td>
+									<td colspan="3" align="left"><pif stmt="if '' != '#pinp.loginerror#'">Error on Login: <b>#pinp.loginerror#</b></pif></td>
+								</tr>
+							</table>
+						</form>
+					</td>
+				</tr>
+			</table>
+		</b><br>
+		<b><br>
+			<a href="../Pio_getpage.cgi?page=Pio_blogpage.html&piouser=#pinp.piouser#&piosid=#pinp.piosid#"><font size="2">Return to blog</font></a><br>
+		</b>
+		<hr noshade>
+		<br>
+		<form action="Pio_getpage.cgi" method="get" name="getblog">
+			<input type="hidden" name="page" value="Pio_blogedit.html" border="0"><input type="hidden" name="piosid" value="#pinp.piosid#" border="0"><input type="hidden" name="piouser" value="#pinp.piouser#" border="0"><input type="submit" name="sqlbutton" value="get last 10 entries" border="0">
+		</form>
+		<table border="0" cellspacing="2" cellpadding="3">
+			<tr>
+				<td valign="bottom">
+					<form action="Pio_getpage.cgi" method="get" name="getblog">
+						Enter Date and After<br>
+						<font size="2">yyyymmdd</font><br>
+						<input type="text" name="entrydate" size="10" maxlength="10" border="0"><br>
+						Row count: <input type="text" name="rowcount" value="25" size="2" maxlength="3" border="0"><br>
+						<br>
+						<input type="hidden" name="page" value="Pio_blogedit.html" border="0"><input type="hidden" name="piosid" value="#pinp.piosid#" border="0"><input type="hidden" name="piouser" value="#pinp.piouser#" border="0"><input type="submit" name="sqlbutton" value="get entries after" border="0">
+					</form>
+				</td>
+				<td valign="bottom">
+					<form action="Pio_getpage.cgi" method="get" name="getblog">
+						Enter Date and Before<br>
+						<font size="2">yyyymmdd</font><br>
+						<input type="text" name="entrydate" value="" size="10" maxlength="10" border="0"><br>
+						Row count: <input type="text" name="rowcount" value="25" size="2" maxlength="3" border="0"><br>
+						<br>
+						<input type="hidden" name="page" value="Pio_blogedit.html" border="0"><input type="hidden" name="piosid" value="#pinp.piosid#" border="0"><input type="hidden" name="piouser" value="#pinp.piouser#" border="0"><input type="submit" name="sqlbutton" value="get entries before" border="0">
+					</form>
+				</td>
+				<td valign="bottom">
+					<form action="Pio_getpage.cgi" method="get" name="getblog">
+						Enter Subject Word<br>
+						<br>
+						<input type="text" name="subjectword" size="24" border="0"><br>
+						Row count: <input type="text" name="rowcount" value="10" size="2" maxlength="3" border="0"><br>
+						<br>
+						<input type="hidden" name="page" value="Pio_blogedit.html" border="0"><input type="hidden" name="piosid" value="#pinp.piosid#" border="0"><input type="hidden" name="piouser" value="#pinp.piouser#" border="0"><input type="submit" name="sqlbutton" value="like subject" border="0"><br>
+					</form>
+				</td>
+				<td valign="bottom">
+					<form action="Pio_getpage.cgi" method="get" name="getblog">
+						<br>
+						Enter Text ID<br>
+						to Update<br>
+						<input type="text" name="updatetextid" size="10" border="0"><br>
+						Row count: <input type="text" name="rowcount" value="10" size="2" maxlength="3" border="0"><br>
+						<br>
+						<input type="hidden" name="page" value="Pio_blogedit.html" border="0"><input type="hidden" name="piosid" value="#pinp.piosid#" border="0"><input type="hidden" name="piouser" value="#pinp.piouser#" border="0"><input type="submit" name="sqlbutton" value="get-textid" border="0">
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+		<br>
+
+		<form action="Pio_getpage.cgi" method="get" name="editblog">
+			<table border="0" cellspacing="2" cellpadding="3">
+				<tr>
+					<td width="324">
+						<table border="0" cellspacing="2" cellpadding="2">
+							<tr>
+								<td align="center" valign="top">TextID:<br>
+									<pval.gettextid.textid.0>
+									<input type="hidden" name="textid" value="#textid#" border="0">#textid# 
+									<palt>
+										New Entry 
+									</palt>
+									</pval></td>
+								<td valign="top">
+									<table border="0" cellspacing="2" cellpadding="0">
+										<tr>
+											<td>Subject:<br>
+												<input type="text" name="subject" value="<pval.gettextid.subject.0></pval>" size="50" border="0"><br>
+												<br>
+											</td>
+										</tr>
+										<tr>
+											<td>
+											Type:
+											<pval.gettextid.type.0>
+									<input type="text" name="type" value="#type#" size="12" maxlength="12" border="0">
+									<palt>
+										<input type="text" name="type" value="blog" size="12" maxlength="12" border="0">
+									</palt>
+									</pval></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td align="right">
+						<table border="0" cellspacing="2" cellpadding="0">
+							<tr>
+								<td> Text Group:<br>
+									<input type="text" name="textgroup" value="<pval.gettextid.textgroup.0></pval>" size="25" maxlength="25" border="0"></td>
+							</tr>
+							<tr>
+								<td align="right">
+						Status:<input type="text" name="status" value="<pval.gettextid.status.0></pval>" size="3" maxlength="1" border="0"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="324"><font size="1">
+							<pval.gettextid.entrydate.0>
+							Entry Date: #entrydate#</pval><br>
+							<pval.gettextid.tmstamp.0>
+							TimeStamp: #tmstamp#</pval></font></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td width="324"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="2">Entry:<br>
+						<textarea name="entry" rows="10" cols="80"><pval.gettextid.entry.0></pval></textarea><br>
+					</td>
+				</tr>
+				<tr>
+					<td width="324"></td>
+					<td></td>
+				</tr>
+			</table>
+			<table width="300" border="0" cellspacing="2" cellpadding="3">
+				<tr>
+					<td><pif stmt="if '#pinp.updatetextid#' != ''"><input type="submit" name="sqlbutton" value="update" border="0"></pif></td>
+					<td><input type="submit" name="sqlbutton" value="insert" border="0"></td>
+					<td width="10%"><input type="hidden" name="page" value="Pio_blogedit.html" border="0"> <input type="hidden" name="piosid" value="#pinp.piosid#" border="0"> <input type="hidden" name="piouser" value="#pinp.piouser#" border="0"></td>
+					<td><pif stmt="if '#pinp.updatetextid#' != ''"><input type="submit" name="sqlbutton" value="update_entry" border="0"></pif></td>
+				</tr>
+			</table>
+			<p> 
+				
+				
+			</p>
+		</form>
+		<br>
+		examples:<br>Images:&lt;img src=&quot;yourimageurlhere&quot; alt=&quot;&quot; height=&quot;??&quot; width=&quot;??&quot; border=&quot;0&quot;&gt;<br>
+		Links:&lt;a href=&quot;yourlinkurlhere&quot;&gt;your linked text here&lt;/a&gt;<br>
+		<br>
+		
+		List Of Blog Entries:<br>
+		<table border="0" cellspacing="2" cellpadding="2">
+			<tr bgcolor="#aaaaaa">
+				<td>TextID</td>
+				<td>Subject</td>
+				<td>Status</td>
+				<td width="300">Entry</td>
+				<td>Type</td>
+				<td>Text Group</td>
+				<td>Entry Date</td>
+				<td>TimeStamp</td>
+			</tr>
+			<pval.getentry.*.*>
+			<tr valign="top">
+				<td align="center"><a href="Pio_getpage.cgi?updatetextid=#textid#&rowcount=10&page=Pio_blogedit.html&piosid=#pinp.piosid#&piouser=#pinp.piouser#&sqlbutton=get-textid">#textid#</a></td>
+				<td>#subject#</td>
+				<td>#status#</td>
+				<td width="300">#entry#</td>
+				<td>#type#</td>
+				<td>#textgroup#</td>
+				<td>#entrydate#</td>
+				<td>#tmstamp#</td>
+			</tr>
+			</pval>
+		</table>
+		<br>
+		<br>
+		<br>
+	</body>
+
+</html>

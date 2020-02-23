@@ -1,0 +1,267 @@
+<Pio_manblueeye_orig.jpg!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>pioUser Admin</title>
+		<pinp name="piouser" default="">
+		<pinp name="piosid" default="">
+		<pinp name="getpiouser" default="">
+		<pinp name="sqlbutton" default="getusers">
+		<pinp name="entrydate" default="">
+		<pinp name="rowcount" default="25">
+		<pinp name="loginerror" default="">
+		<pinp name="beginwith" default="">
+		<pinp name="piouserclass" default="">
+		<pinp name="piouserpass" default="">
+		<pinp name="fname" default="">
+		<pinp name="mname" default="">
+		<pinp name="lname" default="">
+		<pinp name="addr1" default="">
+		<pinp name="addr2" default="">
+		<pinp name="city" default="">
+		<pinp name="state" default="">
+		<pinp name="country" default="">
+		<pinp name="postal" default="">
+		<pinp name="email" default="">
+		<pinp name="emailprivate" default="">
+		<pinp name="pipemail" default="">
+		<pinp name="phone" default="0">
+		<pinp name="url" default="">
+		
+	<pif stmt="if '#pinp.sqlbutton#' == 'getusers'">	
+	<pobj id="getusers" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="piouser, fname, lname, email, pioclass">select piouser.piouser, piouser.fname, piouser.lname, piouser.email, pioauth.pioclass from piouser, pioauth where piouser.piouser >= '#pinp.beginwith#' and piouser.piouser=pioauth.piouser order by piouser.piouser</pobj>
+	</pif>
+
+	
+	<pif stmt="if '#pinp.sqlbutton#' == 'getuserinfo'">	
+	<pobj id="getuserinfo" name="Pio_dbselect" rowcount="1" vars="piouser, fname, mname, lname, addr1, addr2, city, state, country, postal, email, emailprivate, pipemail, phone, url, piopass, pioclass">select piouser.piouser, piouser.fname, piouser.mname, piouser.lname, piouser.addr1, piouser.addr2, piouser.city, piouser.state, piouser.country, piouser.postal, piouser.email, piouser.emailprivate, piouser.pipemail, piouser.phone, piouser.url, pioauth.piopass, pioauth.pioclass from piouser, pioauth where piouser.piouser ='#pinp.getpiouser#' and piouser.piouser=pioauth.piouser</pobj>
+	<pobj id="getusers" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="piouser, fname, lname, email, pioclass">select piouser.piouser, piouser.fname, piouser.lname, piouser.email, pioauth.pioclass from piouser, pioauth where piouser.piouser >= '#pinp.getpiouser#' and piouser.piouser=pioauth.piouser order by piouser.piouser</pobj>
+	</pif>
+		
+	<pif stmt="if '#pinp.sqlbutton#' == 'insert'">	
+	<pobj id="editpioauth" name="Pio_dbinsert" rowcount="1" vars="result">insert into pioauth set piouser = '#pinp.newpiouser#', piopass = '#pinp.piouserpass#', pioclass = '#pinp.piouserclass#'</pobj>
+	<pobj id="editpiouser" name="Pio_dbinsert" rowcount="1" vars="result">insert into piouser set piouser='#pinp.newpiouser#', fname='#pinp.fname#', mname='#pinp.mname#', lname='#pinp.lname#', addr1='#pinp.addr1#', addr2='#pinp.addr2#', city='#pinp.city#', state='#pinp.state#', country='#pinp.country#', postal='#pinp.postal#', email='#pinp.email#', emailprivate='#pinp.emailprivate#', pipemail='#pinp.pipemail#', phone=#pinp.phone#, url='#pinp.url#'</pobj>
+	<pobj id="getusers" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="piouser, fname, lname, email, pioclass">select piouser.piouser, piouser.fname, piouser.lname, piouser.email, pioauth.pioclass from piouser, pioauth where piouser.piouser >= '#pinp.newpiouser#' and piouser.piouser=pioauth.piouser order by piouser.piouser</pobj>
+  </pif>
+
+
+	<pif stmt="if '#pinp.sqlbutton#' == 'update'">	
+	<pobj id="editpioauth" name="Pio_dbupdate" rowcount="1" vars="result">update pioauth set piopass = '#pinp.piouserpass#', pioclass = '#pinp.piouserclass#' where piouser = '#pinp.getpiouser#'</pobj>
+	<pobj id="editpiouser" name="Pio_dbupdate" rowcount="1" vars="result">update piouser set fname='#pinp.fname#', mname='#pinp.mname#', lname='#pinp.lname#', addr1='#pinp.addr1#', addr2='#pinp.addr2#', city='#pinp.city#', state='#pinp.state#', country='#pinp.country#', postal='#pinp.postal#', email='#pinp.email#', emailprivate='#pinp.emailprivate#', pipemail='#pinp.pipemail#', phone=#pinp.phone#, url='#pinp.url#' where piouser = '#pinp.getpiouser#'</pobj>
+	<pobj id="getusers" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="piouser, fname, lname, email, pioclass">select piouser.piouser, piouser.fname, piouser.lname, piouser.email, pioauth.pioclass from piouser, pioauth where piouser.piouser >= '#pinp.getpiouser#' and piouser.piouser=pioauth.piouser order by piouser.piouser</pobj>
+	</pif>
+	
+	<pif stmt="if '#pinp.sqlbutton#' == 'delete'">	
+	<pobj id="editpioauth" name="Pio_dbdelete" rowcount="1" vars="result">delete from pioauth where piouser = '#pinp.getpiouser#'</pobj>
+	<pobj id="editpiouser" name="Pio_dbdelete" rowcount="1" vars="result">delete from piouser where piouser = '#pinp.getpiouser#'</pobj>
+	<pobj id="getusers" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="piouser, fname, lname, email, pioclass">select piouser.piouser, piouser.fname, piouser.lname, piouser.email, pioauth.pioclass from piouser, pioauth where piouser.piouser >= '#pinp.getpiouser#' and piouser.piouser=pioauth.piouser order by piouser.piouser</pobj>
+	</pif>
+
+	</head>
+
+	<body bgcolor="#ffffff">
+		<b>
+			<table border="0" cellspacing="2" cellpadding="0">
+				<tr>
+					<td valign="middle">
+						<div align="center">
+							<a href="Pio_getpage.cgi?page=Pio_admin.html"><input type="image" src="Pio_manblueeye_half.jpg" alt="" align="absmiddle" border="0"></a></div>
+					</td>
+					<td valign="top" width="10"></td>
+					<td>
+						
+					</td>
+				</tr>
+			</table>
+		</b><br>
+		<hr noshade>
+		<br>
+		<form action="Pio_getpage.cgi" method="get" name="FormName">
+			<table border="0" cellspacing="2" cellpadding="0">
+				<tr>
+					<td>User Begins with:</td>
+					<td><input type="text" name="beginwith" size="5"></td>
+					<td>Rowcount:</td>
+					<td><input type="text" name="rowcount" value="25" size="3" maxlength="3"></td>
+					<td width="15"><input type="hidden" name="page" value="Pio_useradmin.html" border="0"> <input type="hidden" name="piosid" value="#pinp.piosid#" border="0"> <input type="hidden" name="piouser" value="#pinp.piouser#" border="0"></td>
+					<td><input type="submit" name="sqlbutton" value="getusers"></td>
+				</tr>
+				<tr height="2">
+					<td colspan="6" bgcolor="#444444" height="2">
+						
+					</td>
+				</tr>
+			</table>
+		</form>
+		<br>
+		<table border="1" cellspacing="0" cellpadding="0" bgcolor="#eeeeee">
+			<tr>
+				<td>
+					<form action="Pio_getpage.cgi" method="get" name="useradmin">
+						<table border="0" cellspacing="2" cellpadding="3">
+							<tr valign="top">
+								<td width="75">
+									<pval.getuserinfo.piouser.0>
+									
+						pio User:<br>
+									<input type="hidden" name="getpiouser" value="#piouser#" border="0"><b><font size="4">#piouser#</font></b> 
+									<palt>
+										
+							 New User:<input type="text" name="newpiouser" value="" size="25" maxlength="25" border="0">
+
+									</palt>
+									</pval></td>
+								<td>
+									<table border="0" cellspacing="2" cellpadding="0">
+										<tr>
+											<td>First Name</td>
+											<td><input type="text" name="fname" value="<pval.getuserinfo.fname.0></pval>" size="25" maxlength="25" border="0"></td>
+										</tr>
+										<tr>
+											<td>Middle Name</td>
+											<td><input type="text" name="mname" value="<pval.getuserinfo.mname.0></pval>" size="25" maxlength="25" border="0"></td>
+										</tr>
+										<tr>
+											<td>Last Name</td>
+											<td><input type="text" name="lname" value="<pval.getuserinfo.lname.0></pval>" size="30" maxlength="30" border="0"></td>
+										</tr>
+										<tr>
+											<td>Address1:</td>
+											<td><input type="text" name="addr1" value="<pval.getuserinfo.addr1.0></pval>" size="60" maxlength="60" border="0"></td>
+										</tr>
+										<tr>
+											<td>
+												<table border="0" cellspacing="2" cellpadding="0">
+													<tr>
+														<td>Address2:</td>
+													</tr>
+												</table>
+											</td>
+											<td><input type="text" name="addr2" value="<pval.getuserinfo.addr2.0></pval>" size="60" maxlength="60" border="0"></td>
+										</tr>
+										<tr>
+											<td>City</td>
+											<td><input type="text" name="city" value="<pval.getuserinfo.city.0></pval>" size="60" maxlength="60" border="0"></td>
+										</tr>
+										<tr>
+											<td>State</td>
+											<td><input type="text" name="state" value="<pval.getuserinfo.state.0></pval>" size="2" maxlength="5" border="0"></td>
+										</tr>
+										<tr>
+											<td>Country</td>
+											<td><input type="text" name="country" value="<pval.getuserinfo.country.0></pval>" size="30" maxlength="60" border="0"></td>
+										</tr>
+										<tr>
+											<td>Postal Code</td>
+											<td><input type="text" name="postal" value="<pval.getuserinfo.postal.0></pval>" size="10" maxlength="10" border="0"></td>
+										</tr>
+										<tr>
+											<td>Email</td>
+											<td><input type="text" name="email" value="<pval.getuserinfo.email.0></pval>" size="60" maxlength="125" border="0"></td>
+										</tr>
+										<tr>
+											<td>Email-Private</td>
+											<td><input type="text" name="emailprivate" value="<pval.getuserinfo.emailprivate.0></pval>" size="60" maxlength="125" border="0"></td>
+										</tr>
+										<tr>
+											<td>pio-Email</td>
+											<td><input type="text" name="pipemail" value="<pval.getuserinfo.pipemail.0></pval>" size="60" maxlength="125" border="0"></td>
+										</tr>
+										<tr>
+											<td>Phone</td>
+											<td><input type="text" name="phone" value="<pval.getuserinfo.phone.0><palt>0</palt></pval>" size="10" maxlength="13" border="0"></td>
+										</tr>
+										<tr>
+											<td>URL</td>
+											<td><input type="text" name="url" value="<pval.getuserinfo.url.0></pval>" size="60" maxlength="255" border="0"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td width="75"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td width="75"></td>
+								<td>
+									<table border="0" cellspacing="2" cellpadding="0">
+										<tr>
+											<td>Password</td>
+											<td><input type="text" name="piouserpass" value="<pval.getuserinfo.piopass.0></pval>" size="25" maxlength="25" border="0"></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td>Pio_Class</td>
+											<td><input type="text" name="piouserclass" value="<pval.getuserinfo.pioclass.0></pval>" size="25" maxlength="25" border="0"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2"></td>
+							</tr>
+							<tr>
+								<td width="75"></td>
+								<td></td>
+							</tr>
+						</table>
+						<table width="300" border="0" cellspacing="2" cellpadding="3">
+							<tr>
+								<td>
+									<pval.getuserinfo.piouser.0>
+										<input type="submit" name="sqlbutton" value="update" border="0"><!--#piouser#--> 									
+									<palt>
+									  <input type="submit" name="sqlbutton" value="insert" border="0">
+									</palt>
+									</pval>
+								</td>
+								<td></td>
+								<td width="10%"><input type="hidden" name="page" value="Pio_useradmin.html" border="0"> <input type="hidden" name="piosid" value="#pinp.piosid#" border="0"> <input type="hidden" name="piouser" value="#pinp.piouser#" border="0"></td>
+								<td>									<pval.getuserinfo.piouser.0>
+										<input type="submit" name="sqlbutton" value="delete" border="0"><!--#piouser#--> 									
+									</pval>
+
+								</td>
+							</tr>
+						</table>
+					</form>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<br>
+		<br>
+		
+		
+		List Of pio Users:<br>
+		<table border="0" cellspacing="2" cellpadding="2">
+			<tr bgcolor="#aaaaaa">
+				<td>pioUser</td>
+				<td>First Name</td>
+				<td>Last Name</td>
+				<td width="400">Email</td>
+				<td>class</td>
+			</tr>
+			<pval.getusers.*.*>
+			<tr valign="top">
+				<td><a href="Pio_getpage.cgi?getpiouser=#piouser#&rowcount=10&page=Pio_useradmin.html&piosid=#pinp.piosid#&piouser=#pinp.piouser#&sqlbutton=getuserinfo">#piouser#</a></td>
+				<td>#fname#</td>
+				<td>#lname#</td>
+				<td width="400">#email#</td>
+				<td>#pioclass#</td>
+			</tr>
+			</pval>
+		</table>
+		<br>
+		<br>
+		<br>
+	</body>
+
+</html>

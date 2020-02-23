@@ -1,0 +1,174 @@
+pio SQL DB files
+
+pio mail files used to manage mail and maillists.  
+[piomaillist]:
+	[piouser]
+	[maillist] - it's name
+	[admininfo] - unsub text etc.
+	
+[piomailrcpnt]
+	[piouser]
+	[maillist]
+	[recipient]
+
+[piomailmsg]
+	[piouser]
+	[msgid]				varchar-so it's a meaningful identifier.
+	[maillist]
+	[subject]
+	[body]
+	[completed]		shows if the email message has been finalized. - value = y,n
+	[tmstamp]
+	[tmsent]
+
+see below create table - [piotext]
+text reference data
+[piouser]
+[textid]
+[subject]needed a subject line
+[entry]
+[entrydate] after doing a mysql update on all records, I discovered I need an initial DATETIME field!
+[timestamp]
+[status]status field of text entry		posted, hidden, pre (not finalized)
+
+added a textgroup to piotext to account for multiple kinds of entries.
+[textgroup]	for organizing repeated entries by group.  eg. george bush, bubblebobble etc.
+added a type to account for various types- specifically for blog and other entries
+[type] type of entry-blog, essay, consc-rsrch, etc.
+
+
+see below create table - [piotextcmnt]
+
+[piouser]
+[textid]
+[sequence]
+[cmntname]
+[cmntemail]
+[comment]
+[timestamp]
+
+
+see below create table [piourldict]
+[piouser]
+[url]
+[urlentry]
+[urldesc]
+
+see bleow create table [piouser]
+[piouser]
+[address]
+[city]
+[state/province]
+[country]
+[postal]
+[email]
+[emailprivate]
+[pipemail]
+[phone]
+[url]
+
+
+see below create table [piolog] used to log url entries in pio.
+added 11/06/02
+[timestamp]
+[ipaddr]
+[revlookup]
+[requrl]
+[qrystring]
+[browser]
+
+see below create table [pioauth]
+[piouser]
+[piopass]
+[pioclass]
+[tmstamp]
+[ipaddr]
+[browser]
+[piosid]
+
+[pioclass]	  a class dictates the users file authorities.
+one user must have pioadmin class.  pioadmin class has global powers. 
+the pioadmin can specify other classes
+
+see below create table [piouserdir]
+[piouser]
+[userdir]
+[fprefix]
+[fsuffix]
+[fincr]
+
+[piouserdir] is the folder the user has for storing file uploads. 
+A user my have many different shared folders as determined by the admin.
+Each file uploaded may be given a prefix, a suffix and an increment value.
+like: [fprefix]originalname[fsuffix][fincr]originalextension
+
+If no prefix,suffix or increment is given then the file uploaded to the
+directory is originalname.originalextension
+
+All increments are in the thousands- 0001, 0002, 0003
+Files with no increment value (use a 1) will replace an existing file of the
+same name.  An increment value of 0 will add that value in as the increment
+and then replace it if the file already exists.  . 
+eg.  originalname0000.originalextension
+An increment of 1 or 3 or 5 will ad that amount to the last file with the 
+same name...eg  [fprefix]originalname[fsuffix]addincrement3.originalextension
+
+Prefix and suffix values are whatever the admin wants.  typically adding 
+images from different users into a file would append the users name.  If you 
+want a seperator before the increment value you could add and underscrore to 
+the suffix field.
+
+eg a record like this:. 
+['user']
+['/Library/WebServer/Documents/sharedimgs']
+['user_']
+['_']
+[1]
+
+would produce a files in the sharedimgs folder like this...up to 9999 files
+with the same original name and ext (like myimage.jpg):
+calvin_myimage_0001.jpg
+calvin_myimage_0002.jpg
+
+see below create table [pioclasstable]
+[pioclass]
+[table]
+[insert]		indicates the level of authority.  F full access to table, R record access to table, N no access to table
+[update]	each table has 4 types of authority.
+[delete]
+[select]
+
+see below create table [pioclasspobj]
+[pioclass]
+[pobjid]
+[page]			indicates the pobj/pages that a class is allowed to run, blank means all
+[insert]			and the function that is allowed.
+[update]		Record control, Full access to pobj, No access, Table access (R,F,N,T), if T, check pioclasstable.
+[delete]
+[select]
+
+default values:
+pioclass	blank
+pobjname	blank
+page			blank
+insert		R
+update		R
+delete		R
+select		F
+
+A record level update is piouser="piouservalue" or piouser = "piouservalue", if this is not in string, it fails an authority check.
+A blank class uses the default values.
+
+only a pioadmin can modify pio files:
+except user selects to piouser
+and Anonymous selects to piourldict, piousertext, piotext
+and user update/insert to piouser piourldict, piousertext, piotext
+
+piourldict should be used to preprocess the piotext entries....that's an idea anyway, otherwise, it's processed at the end of piogetpage.
+____________________________________________________________
+
+
+
+
+#---------------pio User/Authorization Files--------------------------------
+#for the actual files/create statements and loading of records see the file Pio_sqlfiles.txt

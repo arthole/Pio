@@ -1,0 +1,360 @@
+<Pio_manblueeye_orig.jpg!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>pioUser Admin</title>
+		<pinp name="piouser" default="">
+		<pinp name="piosid" default="">
+		<pinp name="sqlbutton" default="getclasslist">
+		<pinp name="rowcount" default="25">
+		<pinp name="loginerror" default="">
+		<pinp name="beginwith" default="">
+		<pinp name="getpioclass" default="">
+		<pinp name="getpiotable" default="">
+		<pinp name="dbselect" default="">
+		<pinp name="dbinsert" default="">
+		<pinp name="dbupdate" default="">
+		<pinp name="dbdelete" default="">
+		<pinp name="newclass" default="">
+		<pinp name="dbtable" default="">
+		<pinp name="pioclass" default="">
+		
+	<pif stmt="if '#pinp.sqlbutton#' == 'getclasslist' or '#pinp.sqlbutton#' == 'cancel'">	
+	<pobj id="getclasslist" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete">select pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete from pioclasstable where pioclass >= '#pinp.pioclass#' and dbtable >= '#pinp.dbtable#' order by pioclass, dbtable</pobj>
+	</pif>
+
+	
+	<pif stmt="if '#pinp.sqlbutton#' == 'getclasstable'">	
+	<pobj id="getclasstable" name="Pio_dbselect" rowcount="1" vars="pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete">select pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete from pioclasstable where pioclass = '#pinp.getpioclass#' and dbtable = '#pinp.getdbtable#'</pobj>
+	<pobj id="getclasslist" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete">select pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete from pioclasstable where pioclass >= '#pinp.pioclass#' and dbtable >= '#pinp.dbtable#' order by pioclass, dbtable</pobj>
+	</pif>
+		
+	<pif stmt="if '#pinp.sqlbutton#' == 'insert'">	
+	<pobj id="editclasstable" name="Pio_dbinsert" rowcount="1" vars="result">insert into pioclasstable set pioclass = '#pinp.newclass#', dbtable = '#pinp.dbtable#', dbselect = '#pinp.dbselect#', dbinsert = '#pinp.dbinsert#', dbupdate = '#pinp.dbupdate#', dbdelete = '#pinp.dbdelete#'</pobj>
+	<pobj id="getclasslist" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete">select pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete from pioclasstable where pioclass >= '#pinp.newclass#' and dbtable >= '#dbtable#' order by pioclass, dbtable</pobj>
+  </pif>
+
+
+	<pif stmt="if '#pinp.sqlbutton#' == 'update'">	
+	<pobj id="editclasstable" name="Pio_dbupdate" rowcount="1" vars="result">update pioclasstable set dbselect = '#pinp.dbselect#', dbinsert = '#pinp.dbinsert#', dbupdate = '#pinp.dbupdate#', dbdelete = '#pinp.dbdelete#' where pioclass = '#pinp.pioclass#' and dbtable = '#pinp.dbtable#'</pobj>
+	<pobj id="getclasslist" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete">select pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete from pioclasstable where pioclass >= '#pinp.pioclass#' and dbtable >= '#pinp.dbtable#' order by pioclass, dbtable</pobj>
+	</pif>
+	
+	<pif stmt="if '#pinp.sqlbutton#' == 'delete'">	
+	<pobj id="editclasstable" name="Pio_dbdelete" rowcount="1" vars="result">delete from pioclasstable where pioclass = '#pinp.pioclass#' and dbtable = '#pinp.dbtable#'</pobj>
+	<pobj id="getclasslist" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete">select pioclass, dbtable, dbselect, dbinsert, dbupdate, dbdelete from pioclasstable order by pioclass, dbtable</pobj>
+	</pif>
+
+	</head>
+
+	<body bgcolor="#ffffff">
+		<b>
+			<table border="0" cellspacing="2" cellpadding="0">
+				<tr>
+					<td valign="middle">
+						<div align="center">
+							<a href="Pio_getpage.cgi?page=Pio_admin.html"><input type="image" src="Pio_manblueeye_half.jpg" alt="" align="absmiddle" border="0"></a></div>
+					</td>
+					<td valign="top" width="10"></td>
+					<td>
+						
+					</td>
+				</tr>
+			</table>
+		</b><br>
+		<hr noshade>
+		<br>
+		<form action="Pio_getpage.cgi" method="get" name="FormName">
+			<table border="0" cellspacing="3" cellpadding="0">
+				<tr>
+					<td>Class Like:</td>
+					<td><input type="text" name="pioclass" size="10"></td>
+					<td></td>
+					<td></td>
+					<td width="15"><input type="hidden" name="page" value="Pio_classadmin.html" border="0"> <input type="hidden" name="piosid" value="#pinp.piosid#" border="0"> <input type="hidden" name="piouser" value="#pinp.piouser#" border="0"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Table Like:</td>
+					<td><input type="text" name="dbtable" size="10"></td>
+					<td>Rowcount:</td>
+					<td><input type="text" name="rowcount" value="50" size="3" maxlength="3"></td>
+					<td width="15"></td>
+					<td><input type="submit" name="sqlbutton" value="getclasslist"></td>
+				</tr>
+				<tr height="8">
+					<td height="8"></td>
+					<td height="8"></td>
+					<td height="8"></td>
+					<td height="8"></td>
+					<td width="15" height="8"></td>
+					<td height="8"></td>
+				</tr>
+				<tr height="2">
+					<td colspan="6" bgcolor="#444444" height="2">
+						
+					</td>
+				</tr>
+			</table>
+		</form>
+		<br>
+		<table border="1" cellspacing="0" cellpadding="0" bgcolor="#eeeeee">
+			<tr>
+				<td>
+					<form action="Pio_getpage.cgi" method="get" name="useradmin">
+						<table border="0" cellspacing="2" cellpadding="3">
+							<tr valign="top">
+								<td width="75">
+									<pval.getclasstable.pioclass.0><input type="hidden" name="pioclass" value="#pioclass#" border="0">
+									pio Class: <b><font size="4">#pioclass#</font></b><br><br>
+									</pval>
+									New Class:<input type="text" name="newclass" value="" size="25" maxlength="25" border="0">
+									
+									</td>
+								<td>
+									<table border="0" cellspacing="2" cellpadding="0">
+										<tr>
+											<td colspan="2">Table:<br>
+												<input type="text" name="dbtable" value="<pval.getclasstable.dbtable.0></pval>" size="50" maxlength="50" border="0"></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<table border="0" cellspacing="3" cellpadding="0">
+													<tr>
+														<td align="center">Select</td>
+														<td align="center">Insert</td>
+														<td align="center">Update</td>
+														<td align="center">Delete</td>
+													</tr>
+													<tr>
+														<td align="center">
+														<pvif stmt="if '<pval.getclasstable.dbselect.0></pval>' == 'F'">
+														<select name="dbselect">
+														  	<option selected value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbselect.0></pval>' == 'R'">
+														<select name="dbselect">
+																<option selected value="R">Record</option>
+														  	<option value="F">Full</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbselect.0></pval>' == 'N'">
+														<select name="dbselect">
+																<option selected value="N">None</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbselect.0></pval>' != 'R' and '<pval.getclasstable.dbselect.0></pval>' != 'F' and '<pval.getclasstable.dbselect.0></pval>' != 'N'">
+														<select name="dbselect">
+																<option selected value=" ">Blank</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+															</select>
+														</pvif>
+														</td>
+														<td align="center">
+														<pvif stmt="if '<pval.getclasstable.dbinsert.0></pval>' == 'F'">
+														<select name="dbinsert">
+														  	<option selected value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbinsert.0></pval>' == 'R'">
+														<select name="dbinsert">
+																<option selected value="R">Record</option>
+														  	<option value="F">Full</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbinsert.0></pval>' == 'N'">
+														<select name="dbinsert">
+																<option selected value="N">None</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbinsert.0></pval>' != 'R' and '<pval.getclasstable.dbinsert.0></pval>' != 'F' and '<pval.getclasstable.dbinsert.0></pval>' != 'N'">
+														<select name="dbinsert">
+																<option selected value=" ">Blank</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+															</select>
+														</pvif>
+</td>
+														<td align="center">
+														<pvif stmt="if '<pval.getclasstable.dbupdate.0></pval>' == 'F'">
+														<select name="dbupdate">
+														  	<option selected value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbupdate.0></pval>' == 'R'">
+														<select name="dbupdate">
+																<option selected value="R">Record</option>
+														  	<option value="F">Full</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbupdate.0></pval>' == 'N'">
+														<select name="dbupdate">
+																<option selected value="N">None</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbupdate.0></pval>' != 'R' and '<pval.getclasstable.dbupdate.0></pval>' != 'F' and '<pval.getclasstable.dbupdate.0></pval>' != 'N'">
+														<select name="dbupdate">
+																<option selected value=" ">Blank</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+															</select>
+														</pvif>
+</td>
+														<td align="center">
+														<pvif stmt="if '<pval.getclasstable.dbdelete.0></pval>' == 'F'">
+														<select name="dbdelete">
+														  	<option selected value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbdelete.0></pval>' == 'R'">
+														<select name="dbdelete">
+																<option selected value="R">Record</option>
+														  	<option value="F">Full</option>
+																<option value="N">None</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbdelete.0></pval>' == 'N'">
+														<select name="dbdelete">
+																<option selected value="N">None</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="B">Blank</option>
+															</select>
+														</pvif>
+														<pvif stmt="if '<pval.getclasstable.dbdelete.0></pval>' != 'R' and '<pval.getclasstable.dbdelete.0></pval>' != 'F' and '<pval.getclasstable.dbdelete.0></pval>' != 'N'">
+														<select name="dbdelete">
+																<option selected value=" ">Blank</option>
+														  	<option value="F">Full</option>
+																<option value="R">Record</option>
+																<option value="N">None</option>
+															</select>
+														</pvif>
+</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td width="75"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td width="75"><input type="hidden" name="page" value="Pio_classadmin.html" border="0"> <input type="hidden" name="piosid" value="#pinp.piosid#" border="0"> <input type="hidden" name="piouser" value="#pinp.piouser#" border="0"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td width="75">
+									<table border="0" cellspacing="2" cellpadding="0">
+										<tr>
+											<td><input type="submit" name="sqlbutton" value="update" border="0"></td>
+											<td width="12"></td>
+											<td><input type="submit" name="sqlbutton" value="delete" border="0"></td>
+										</tr>
+									</table>
+								</td>
+								<td>
+									<table border="0" cellspacing="2" cellpadding="0">
+										<tr>
+											<td><input type="submit" name="sqlbutton" value="insert" border="0"></td>
+											<td width="12"></td>
+											<td><input type="submit" name="sqlbutton" value="cancel"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<table width="300" border="0" cellspacing="2" cellpadding="3">
+							<tr>
+								<td>	</td>
+								<td></td>
+								<td width="10%"></td>
+								<td>									
+										
+
+								</td>
+							</tr>
+						</table>
+					</form>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<br>
+		<br>List Of pioClass Tables:<br>
+		<table border="0" cellspacing="2" cellpadding="2">
+			<tr bgcolor="#aaaaaa">
+				<td>pioClass</td>
+				<td>Table</td>
+				<td></td>
+				<td>Select, Insert, Update, Delete</td>
+			</tr>
+			<pval.getclasslist.*.*comma>
+			<tr valign="top">
+				<td><a href="Pio_getpage.cgi?getpioclass=#pioclass#&getdbtable=#dbtable#&rowcount=50&page=Pio_classadmin.html&piosid=#pinp.piosid#&piouser=#pinp.piouser#&sqlbutton=getclasstable">#pioclass#</a></td>
+				<td><a href="Pio_getpage.cgi?getpioclass=#pioclass#&getdbtable=#dbtable#&rowcount=50&page=Pio_classadmin.html&piosid=#pinp.piosid#&piouser=#pinp.piouser#&sqlbutton=getclasstable">#dbtable#</a></td>
+				<td></td>
+				<td width="400">
+					<table border="0" cellspacing="2" cellpadding="0">
+						<tr>
+							<td>#dbselect#,</td>
+							<td>#dbinsert#,</td>
+							<td>#dbupdate#,</td>
+							<td>#dbdelete#</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			</pval>
+		</table>
+		<br>
+		<br><pval.getclasstable.*.*></pval>
+		<br>
+		<br>PINP: #pinp.*#
+		<br>
+	</body>
+
+</html>

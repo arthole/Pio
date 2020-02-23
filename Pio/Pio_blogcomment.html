@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Blog - Add a Comment</title>
+		<pinp name="textuser" default="">
+		<pinp name="textid" default="">
+		<pinp name="sqlbutton" default="">
+		<pinp name="rowcount" default="10">
+		<pinp name="comment" default="">
+		<pinp name="username" default="">
+		<pinp name="userurl" default="">
+		<pinp name="useremail" default="">
+		
+	<pif stmt="if '#pinp.sqlbutton#' == 'insert'">	
+	<pobj id="insertpiotextcmnt" name="Pio_dbinsert" rowcount="1" vars="result">insert into piotextcmnt set piouser="#pinp.textuser#", textid=#pinp.textid#, comment="""#pinp.comment#""", username="#pinp.username#", userurl="""#pinp.userurl#""", useremail="#pinp.useremail#", entrydate=now()</pobj>
+	</pif>
+
+	<pobj id="getentry" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textid, subject, entry, tmstamp, textgroup">select textid, subject, entry, tmstamp, textgroup from piotext where piouser="#pinp.textuser#" and textid=#pinp.textid#</pobj>
+	<pobj id="getcomments" name="Pio_dbselect" rowcount="#pinp.rowcount#" vars="textuser, textid, cmntseq, username, useremail, userurl, comment, entrydate">select piouser, textid, cmntseq, username, useremail, userurl, comment, entrydate from piotextcmnt where piouser="#pinp.textuser#" and textid=#pinp.textid# order by piouser, textid, cmntseq</pobj>
+	
+
+	</head>
+
+	<body bgcolor="#ffffff">
+		<a href="Pio_getpage.cgi?page=index_main.html"><input type="image" src="tumul_beastie2_sm.gif" alt="" border="0"></a><br>
+		<b><a href="http://thearthole.net/arthole/Pio_getpage.cgi?page=index_main.html"><font size="2">Return to blog</font></a><br>
+		</b>
+		<hr noshade>
+		<br>
+		Comment on Entry:
+		<table border="0" cellspacing="2" cellpadding="2">
+			<pval.getentry.*.*>
+			<tr valign="top">
+				<td align="center"><a href="Pio_getpage.cgi?page=index_main.html&textid=#textid#">#textid#</a></td>
+				<td><u>#subject#</u></td>
+				<td>#textgroup#</td>
+			</tr>
+			<tr valign="top">
+				<td align="center"></td>
+				<td>#entry#</td>
+				<td><font size="2">#tmstamp#</font></td>
+			</tr>
+			</pval>
+		</table>
+		<br>
+		<br>
+		
+		List Of Comments:<br>
+		<table border="0" cellspacing="2" cellpadding="2">
+			<tr bgcolor="#aaaaaa">
+				<td>Who</td>
+				<td>What</td>
+				<td>When</td>
+			</tr>
+			<pval.getcomments.*.*>
+			<tr valign="top">
+				<td><pvif stmt="if '#userurl#' != ''"><a href="#userurl#">#username#</a>
+				<pvelse>#username#</pvelse></pvif><br>
+					#useremail#</td>
+				<td>#comment#</td>
+				<td>#entrydate#</td>
+			</tr>
+			</pval>
+		</table>
+		<br>
+		<br>
+		<form action="Pio_getpage.cgi" method="get" name="editblog">
+			<table border="0" cellspacing="2" cellpadding="3">
+				<tr>
+					<td width="324">
+						<table border="0" cellspacing="2" cellpadding="2">
+							<tr>
+								<td align="right" valign="top">Name:</td>
+								<td valign="top"><input type="text" name="username" value="" size="75" border="0"></td>
+							</tr>
+							<tr>
+								<td align="right" valign="top">URL:</td>
+								<td valign="top"><input type="text" name="userurl" value="" size="75" border="0"></td>
+							</tr>
+							<tr>
+								<td align="right" valign="top">Email:</td>
+								<td valign="top"><input type="text" name="useremail" value="" size="75" border="0"><br>
+									<font size="2">note:please write out your email so it's human readable, but not spam bot readable</font></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="324"></td>
+				</tr>
+				<tr>
+					<td width="324">Comment:<br>
+						<textarea name="comment" rows="10" cols="80"></textarea><br>
+					</td>
+				</tr>
+				<tr>
+					<td width="324"></td>
+				</tr>
+			</table>
+			<p>
+			
+			<input type="hidden" name="page" value="Pio_blogcomment.html" border="0">
+			<input type="hidden" name="textid" value="#pinp.textid#" border="0">
+			<input type="hidden" name="textuser" value="#pinp.textuser#" border="0">
+			<input type="submit" name="sqlbutton" value="insert" border="0"></p>
+		</form>
+		<br>
+	</body>
+
+</html>

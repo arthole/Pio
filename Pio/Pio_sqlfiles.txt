@@ -1,0 +1,530 @@
+#pio SQL DB files
+#
+#
+#command to process this into MySQL:
+#% mysql dbname < ./Pio_sqlfiles.txt
+#
+#---------------pio User/Authorization Files--------------------------------
+#for more descriptions see Pio_sqlfiles_desc.txt
+#
+#Begin cut and paste to mysql below.
+
+#command to create the pio test db:
+#mysqladmin create pio
+
+create table piourldict
+(piouser VARCHAR(25) NOT NULL,
+urlentry VARCHAR(100) NOT NULL,
+url VARCHAR(255) NOT NULL, 
+urldesc VARCHAR(100),
+PRIMARY KEY (piouser, urlentry),
+INDEX piourldict1 (piouser, urlentry)
+);
+
+create table piouser
+(piouser VARCHAR(25) NOT NULL,
+fname VARCHAR(25) NOT NULL,
+mname VARCHAR(25) NOT NULL,
+lname VARCHAR(30) NOT NULL,
+addr1 VARCHAR(60),
+addr2 VARCHAR(60),
+city VARCHAR(60),
+state VARCHAR(5),
+country VARCHAR(60),
+postal VARCHAR(10),
+email VARCHAR(125),
+emailprivate VARCHAR(125),
+pipemail VARCHAR(125),
+phone BIGINT,
+url VARCHAR(255),
+PRIMARY KEY (piouser),
+INDEX piouser1 (piouser)
+);
+
+create table pioauth_old
+(piouser VARCHAR(25) NOT NULL,
+piopass VARCHAR(25) NOT NULL,
+pioclass VARCHAR(25) NOT NULL,
+piosid VARCHAR(40) NOT NULL,
+#tmstamp TIMESTAMP NOT NULL,
+tmstamp BIGINT NOT NULL,
+ipaddr VARCHAR(25) NOT NULL,
+browser VARCHAR(60) NOT NULL,
+sidreset INT NOT NULL,
+sidtmout INT NOT NULL,
+PRIMARY KEY (piouser),
+INDEX pioauth1 (piouser),
+INDEX pioauth2 (pioclass, piouser),
+INDEX pioauth3 (piosid)
+);
+
+
+#new pioauth to use encryption in piopass
+create table pioauth
+(piouser VARCHAR(25) NOT NULL,
+piopass VARCHAR(75) NOT NULL,
+pioclass VARCHAR(25) NOT NULL,
+piosid VARCHAR(40) NOT NULL,
+#tmstamp TIMESTAMP NOT NULL,
+tmstamp BIGINT NOT NULL,
+ipaddr VARCHAR(25) NOT NULL,
+browser VARCHAR(60) NOT NULL,
+sidreset INT NOT NULL,
+sidtmout INT NOT NULL,
+PRIMARY KEY (piouser),
+INDEX pioauth1 (piouser),
+INDEX pioauth2 (pioclass, piouser),
+INDEX pioauth3 (piosid)
+);
+
+
+#setup the pioadmin piouser with pioadmin class.  pass = piopass.  this must be changed right away.
+insert into piouser set piouser = 'pioadmin';
+insert into pioauth set piouser = 'pioadmin', piopass = 'piopass', pioclass = 'pioadmin';
+
+create table piouserdir
+(piouser VARCHAR(25) NOT NULL,
+userdir VARCHAR(255) NOT NULL,
+prefix VARCHAR(25),
+suffix VARCHAR(25),
+incr INT,
+PRIMARY KEY (piouser, userdir),
+INDEX piouserdir1 (piouser, userdir)
+);
+
+
+create table pioclasstable
+(pioclass VARCHAR(25) NOT NULL,
+dbtable VARCHAR(50) NOT NULL,
+dbinsert CHAR(1) NOT NULL,
+dbupdate CHAR(1) NOT NULL,
+dbdelete CHAR(1) NOT NULL,
+dbselect CHAR(1) NOT NULL,
+PRIMARY KEY (pioclass, dbtable),
+INDEX pioclasstable1 (pioclass, dbtable),
+INDEX pioclasstable2 (dbtable, pioclass)
+);
+
+#authorization insert update delete select
+
+insert into pioclasstable values('pioadmin', 'pioauth', 'F', 'F', 'F', 'F');
+insert into pioclasstable values('pioadmin', 'pioclasspobj', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('pioadmin', 'pioclasstable', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('pioadmin', 'piouser', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('pioadmin', 'piouserdir', 'F', 'F', 'F', 'F');
+
+insert into pioclasstable values('pioadmin', 'piourldict', 'F', 'R', 'R', ' '); 
+insert into pioclasstable values('pioadmin', 'piotext', 'F', 'R', 'R', ' '); 
+insert into pioclasstable values('pioadmin', 'piotextcmnt', 'F', 'R', 'R', ' '); 
+
+insert into pioclasstable values('pioblog', 'piourldict', 'F', 'R', 'R', ' '); 
+insert into pioclasstable values('pioblog', 'piotext', 'F', 'R', 'R', ' '); 
+insert into pioclasstable values('pioblog', 'piotextcmnt', 'F', 'R', 'R', ' '); 
+
+##below are commented out inserts for piotextcmnt for a blank piouser. 
+#ie for any user who wants to comment on a blog
+#insert into pioclasstable values('', 'piotextcmnt', '', 'R', 'R', 'F'); 
+#insert into pioclasspobj values('', 'insertpiotextcmnt', '', 'F', 'R', 'R', 'F');
+
+#insert is blank to accomodate the auth values from a pobj...for instance the pobj that controls setting up new users.
+insert into pioclasstable values('', 'piouser', ' ', 'R', 'R', ' '); 
+
+insert into pioclasstable values('', 'pioauth', 'N', 'N', 'N', 'N'); 
+insert into pioclasstable values('', 'pioclasspobj', 'N', 'N', 'N', 'N'); 
+insert into pioclasstable values('', 'pioclasstable', 'N', 'N', 'N', 'N'); 
+
+#the piotest table should have full authority through the testing phase.
+insert into pioclasstable values('', 'piotest', 'F', 'F', 'F', 'F'); 
+
+#the default setup for files.  notice that pioadmin has full rights to control/admin files 
+#and the same rights to user managed files as everyone else, except piouser.
+#adding additional files may or may not require modifying pioclasstable...notice that piouser can be read by anyone
+#authorized to an allowed pobj.  In the default setup, anyone can view any other users data if a pobj is run allowing it.
+#
+#notice that piouserdict, text, urldict are all blank on select.  this allows any user to get those values based on pobj 
+#when loading a page...like say a blog entry. 
+#
+#the authorities are N, R, ' ', F -- None, Record, PobjAuth(blank) and Full.  Anything not N, R, F is treated as a blank and defaults
+#to the pobj  authority.
+#
+#If multiple tables are selected in an sql stmt, the most restrictive authority is used
+#
+
+
+create table pioclasspobj
+(pioclass VARCHAR(25) NOT NULL,
+pobjid VARCHAR(25) NOT NULL,
+page VARCHAR(255) NOT NULL,
+dbinsert CHAR(1) NOT NULL,
+dbupdate CHAR(1) NOT NULL,
+dbdelete CHAR(1) NOT NULL,
+dbselect CHAR(1) NOT NULL,
+PRIMARY KEY (pioclass, pobjid, page),
+INDEX pioclasspobj1 (pioclass, pobjid, page),
+INDEX pioclasspobj2 (pobjid, pioclass, page)
+);
+
+#this sets the default authorizations value, eg, for nobody, and the value for the pioadmin (administrators can run everything)
+
+insert into pioclasspobj values('', '', '', 'R', 'R', 'R', 'F');
+insert into pioclasspobj values('pioadmin', '', '', 'F', 'F', 'F', 'F');
+
+#
+#what authority dominates?  pioclasstable authority supersedes pioclasspobj authority.  an entry for a table will supersede
+#an entry for a pobj.  pioclasstable entries are used to RESTRICT access to tables.  Therefore, table entries override any 
+#pobj authority.  
+#
+#EXCEPTION!
+#When the pobj entry is more restrictive and the pobj entry is not blank  (and the pioclasstable pioclass entry is not blank?)
+#
+#the pobj auths are N, R, F   None, Record, Full..  anything else defaults to R.
+#
+#because pioclasspobj defaults R on blank users, it's important to add entries where updates/inserts/and deletes are done by pobj's
+#
+#
+#
+
+#---------------pio Command Execution System Tables--------------------------------
+
+
+create table piousercmd
+(piouser VARCHAR(25) NOT NULL,
+cmdname VARCHAR(20) NOT NULL,
+cmd TEXT NOT NULL,
+outputfile VARCHAR(255) NOT NULL,
+lastexec DATETIME NOT NULL,
+PRIMARY KEY (piouser, cmdname),
+INDEX piousercmd1 (piouser, cmdname),
+INDEX piousercmd2 (cmdname, piouser)
+);
+
+#order = insert, update, delete, select
+insert into pioclasstable values('pioadmin', 'piousercmd', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('', 'piousercmd', 'N', 'N', 'N', 'N'); 
+#insert into pioclasstable values('#someclass#', 'piousercmd', 'N', 'N', 'N', 'R'); 
+#note above that existing users (with pioclass values) 
+#should be able to select their own piousercmd records to execute those commands...or send them to piocmdexec
+#a pioadmin should be the only one who modifies entries via the web in this table....of course you are free to add entries
+#that allow other class of users to modify this table. 
+
+#nextexec should be part of the key to have commands executable into the future. eg scheduling by the user
+create table pipexeccmd
+(piouser VARCHAR(25) NOT NULL,
+cmdname VARCHAR(20) NOT NULL,
+nextexec DATETIME NOT NULL,
+starttime DATETIME NOT NULL,
+PRIMARY KEY (piouser, cmdname, nextexec),
+INDEX pipexeccmd1 (piouser, cmdname, nextexec),
+INDEX pipexeccmd2 (cmdname, piouser, nextexec),
+INDEX pipexeccmd3 (starttime, piouser, cmdname, nextexec)
+);
+
+insert into pioclasstable values('pioadmin', 'pipexeccmd', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('', 'pipexeccmd', 'N', 'N', 'N', 'N'); 
+#insert into pioclasstable values('#someclass#', 'pipexeccmd', 'R', 'N', 'R', 'R'); 
+#note above that existing users (with pioclass values) 
+#should be able to insert and delete the commands they can execute by selecting records from piousercmd
+#and inserting them into pipexeccmd which is then processed by the pipexeccmd.py job. 
+#The pipexeccmd.py job will delete the entries in pipexeccmd after execution.  The user does not need to update
+#any entry only insert or delete entries, as the entries should always be copied from piousercmd which is 
+#essentially the file that authorizes the user to the command, and only pioadmin (or authorized user/classes) 
+#should be creating/maintaining entries in that table. 
+
+
+create table pipexeccmd_log
+(starttime DATETIME NOT NULL,
+endtime DATETIME NOT NULL,
+log TEXT NOT NULL,
+PRIMARY KEY (starttime)
+);
+
+#the pipexeccmd_log table is only accessed by Pio_execcmd.py, so it can have default authorities. - eg generic read
+
+
+#---------------pio Transaction Log Table--------------------------------
+#used to log activity...not unlike httpd/access_log
+
+create table piolog
+(counter BIGINT NOT NULL auto_increment,
+tmstamp TIMESTAMP,
+ipaddr VARCHAR(25) NOT NULL,
+revlookup VARCHAR(100),
+browser VARCHAR(60) NOT NULL,
+requrl VARCHAR(255) NOT NULL,
+qrystring VARCHAR(255) NOT NULL,
+PRIMARY KEY (counter),
+INDEX piolog1 (tmstamp, counter),
+INDEX piolog2 (ipaddr, tmstamp, counter),
+INDEX piolog3 (requrl, tmstamp, counter),
+INDEX piolog4 (qrystring, tmstamp, counter)
+);
+
+
+#---------------pio Text(blob) System Tables--------------------------------
+
+create table piotext
+(piouser VARCHAR(25) NOT NULL,
+textid DECIMAL(11,3) NOT NULL,
+subject VARCHAR(150) NOT NULL,
+entry TEXT NOT NULL,
+status CHAR(1) NOT NULL,
+entrydate DATETIME NOT NULL,
+tmstamp TIMESTAMP NOT NULL,
+textgroup VARCHAR(90) NOT NULL,
+type VARCHAR(12) NOT NULL,
+struct VARCHAR(60) NOT NULL,
+level int NOT NULL,
+PRIMARY KEY (piouser, textgroup, textid),
+INDEX aomtext1 (piouser, textid),
+INDEX aomtext2 (piouser, textgroup, textid),
+INDEX aomtext3 (piouser, tmstamp, textid),
+INDEX aomtext4 (piouser, subject, textid),
+INDEX aomtext5 (piouser, textgroup, struct, textid),
+INDEX aomtext6 (textgroup, struct, piouser),
+INDEX aomtext7 (textgroup, struct, textid, piouser),
+INDEX aomtext8 (textgroup, level, struct, textid, piouser),
+FULLTEXT (subject, entry)
+);
+
+# textid.  to import data from a program like evernote, use a textid based on date and a decimal addition
+# eg. 20110528.150   Entering or modifying data using a date as textid is a fairly simple fix
+# and 3 decimal positions allows for ample additional entries per day.
+# examples of textgroup: blog, 'my first book', 'about petri-net conversion from neural network'
+# examples of type are: blog, book, essay, wiki  types can be tied to textgroups by using the piotext_type table.
+# examples of structs:  top,  top.toc, top.about, top.ch01, top.ch01.01, top.ch01.02
+# structs are structured data!  which is bad normalization, but it serves a purpose here.
+# levels for the above examples would be 0, 5, 5, 5, 10, 10 respectively.  structs allow a nestable heirarchy.
+# structs allow for heirarchy objects and are unique meaningful identifiers for each text entry in a textgroup
+# this structure allows us to make outlines.  to order structs, they must be alphabetical.
+
+create table piotextcmnt
+(piouser VARCHAR(25) NOT NULL,
+textid DECIMAL(11,3) NOT NULL,
+textgroup VARCHAR(90) NOT NULL,
+cmntseq int NOT NULL auto_increment,
+username VARCHAR(25),
+useremail VARCHAR(100),
+userurl VARCHAR(100),
+comment TEXT NOT NULL,
+entrydate DATETIME NOT NULL,
+tmstamp TIMESTAMP,
+PRIMARY KEY (piouser, textgroup, textid, cmntseq),
+INDEX aomtextcmnt1 (piouser, textgroup, textid, cmntseq),
+INDEX aomtextcmnt2 (username, tmstamp, piouser, textgroup, textid),
+INDEX aomtextcmnt3 (textid, textgroup, cmntseq, piouser, username, tmstamp),
+INDEX aomtextcmnt4 (textgroup, textid, cmntseq, piouser, username, tmstamp)
+);
+
+create table piotext_type
+(piouser VARCHAR(25) NOT NULL,
+textgroup VARCHAR(90) NOT NULL,
+type VARCHAR(12) NOT NULL,
+PRIMARY KEY (piouser, textgroup, type),
+INDEX aomtext_type1 (piouser, textgroup, type),
+INDEX aomtext_type2 (textgroup, type, piouser)
+);
+
+insert into aomtext_type values('user', 'test', 'test');
+
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 1, 'test', 'top', 1, '-top');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 2, 'test', 'sub1', 1, 'ch01');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 3, 'test', 'sub2', 1, 'ch02');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 4, 'test', 'sub2sub1', 2, 'ch01.10');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 5, 'test', 'sub1sub1', 2, 'ch02.10');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 6, 'test', 'sub2sub1sub1', 3, 'ch02.10.10');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 7, 'test', 'sub1sub1sub1', 3, 'ch02.10.20');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 8, 'test', 'sub1sub1sub2', 3, 'ch01.10.10');
+insert into aomtext (piouser, textid, textgroup, subject, level, struct) values ('user', 9, 'test', 'non-struct subject', 0, '');
+
+select piouser, textgroup, textid, subject, struct, level from aomtext order by struct, level, textid;
+
+
+
+
+
+create table piotext_old
+(piouser VARCHAR(25) NOT NULL,
+textid int NOT NULL auto_increment,
+subject VARCHAR(150) NOT NULL,
+entry TEXT NOT NULL,
+status CHAR(1) NOT NULL,
+entrydate DATETIME NOT NULL,
+tmstamp TIMESTAMP NOT NULL,
+textgroup VARCHAR(25) NOT NULL,
+type VARCHAR(12) NOT NULL,
+PRIMARY KEY (piouser, textid),
+INDEX piotext1 (piouser, textid),
+INDEX piotext2 (piouser, tmstamp, textid),
+INDEX piotext3 (piouser, subject, textid),
+INDEX piotext4 (piouser, textgroup, textid),
+FULLTEXT (subject, entry)
+);
+
+create table piotextcmnt_old
+(piouser VARCHAR(25) NOT NULL,
+textid int NOT NULL,
+cmntseq int NOT NULL auto_increment,
+username VARCHAR(25),
+useremail VARCHAR(100),
+userurl VARCHAR(100),
+comment TEXT NOT NULL,
+entrydate DATETIME NOT NULL,
+tmstamp TIMESTAMP,
+PRIMARY KEY (piouser, textid, cmntseq),
+INDEX piotextcmnt1 (piouser, textid, cmntseq),
+INDEX piotextcmnt2 (username, tmstamp, piouser, textid)
+);
+
+
+#---------------pio Email System Tables--------------------------------
+
+
+create table piomail
+(piouser VARCHAR(25) NOT NULL,
+emailid int NOT NULL auto_increment,
+emailto TEXT NOT NULL,
+emailfrom TEXT NOT NULL,
+emaildate DATETIME NOT NULL,
+emaildatestr VARCHAR(50) NOT NULL,
+subject VARCHAR(150) NOT NULL,
+allheaders TEXT NOT NULL,
+body TEXT NOT NULL,
+mailbox VARCHAR(25) NOT NULL,
+mailstatus CHAR(1) NOT NULL,
+mailstatustime DATETIME NOT NULL,
+numberattach INT(2) NOT NULL,
+PRIMARY KEY (piouser, emailid),
+INDEX pipemail1 (piouser, emailid),
+INDEX pipemail2 (piouser, mailbox, emaildate DESC, emailid),
+INDEX pipemail3 (piouser, mailbox, subject, emaildate DESC, emailid),
+INDEX pipemail4 (piouser, mailbox, emailfrom(125), emaildate DESC, emailid),
+INDEX pipemail5 (piouser, mailbox, emailto(125), emaildate DESC, emailid),
+INDEX pipemail6 (piouser, subject, emaildate DESC, emailid),
+INDEX pipemail7 (piouser, mailstatus, emailid DESC),
+INDEX pipemail8 (piouser, mailbox, mailstatus, emailid DESC),
+FULLTEXT (subject, body, allheaders, emailto, emailfrom)
+);
+
+create table piouser_mailbox
+(piouser VARCHAR(25) NOT NULL,
+mailbox VARCHAR(25) NOT NULL,
+mailboxdesc VARCHAR(100) NOT NULL,
+PRIMARY KEY (piouser, mailbox),
+INDEX piouser_mailbox1 (piouser, mailbox)
+);
+
+#the user can create their own mailboxes.  However there are standard ones
+#that should be created for each user:  IN & OUT  
+#A message in the process of being editted should have a blank mailbox, once
+#finished it shoud be filed as "Sent" and the mailbox changed to OUT
+
+create table piomailstatus
+(mailstatus CHAR(1) NOT NULL,
+statusdesc VARCHAR(100) NOT NULL,
+PRIMARY KEY (mailstatus),
+INDEX piomailstatus1 (mailstatus)
+);
+
+insert into piomailstatus values('U', 'Un-Read');
+insert into piomailstatus values('R', 'Replied');
+insert into piomailstatus values('G', 'Group Replied');
+insert into piomailstatus values('S', 'Sent');
+insert into piomailstatus values('D', 'Delete');
+insert into piomailstatus values('N', 'New');
+insert into piomailstatus values('F', 'Forwarded');
+insert into piomailstatus values('B', 'Bounced');
+insert into piomailstatus values('M', 'Marked');
+insert into piomailstatus values('E', 'Edit - Unfinished');
+insert into piomailstatus values('', 'Read/Finished');
+
+#note: blank means read.  changing the mailbox for a new message sets it to un-read
+
+
+create table piomailattach
+(piouser VARCHAR(25) NOT NULL,
+emailid int NOT NULL,
+attachid INT NOT NULL auto_increment,
+mimetype VARCHAR(100) NOT NULL,
+filename VARCHAR(150) NOT NULL,
+thefile MEDIUMBLOB NOT NULL,
+status CHAR(1) NOT NULL,
+PRIMARY KEY (piouser, emailid, attachid),
+INDEX piomailattach1 (piouser, emailid, attachid),
+INDEX piomailattach2 (piouser, emailid, filename)
+);
+
+
+create table piouser_mailaddy
+(piouser VARCHAR(25) NOT NULL,
+emailaddress VARCHAR(125) NOT NULL,
+emailseqn INT(3) NOT NULL,
+redirectaddy VARCHAR(125) NOT NULL,
+allowtosend CHAR(1) NOT NULL,
+PRIMARY KEY (piouser, emailaddress),
+INDEX piousermailaddy1 (piouser, emailaddress),
+INDEX piousermailaddy2 (emailaddress, piouser),
+INDEX piousermailaddy3 (redirectaddy, piouser, emailaddress),
+INDEX piousermailaddy4 (piouser, emailseqn, emailaddress)
+);
+
+#getting pop mail - start Pio_getmail reader.  with parameters of:
+#pophost, popuser, poppass, sqldb, sqluser, sqlhost
+#
+#Pio_getmail gets mail from the popuser mailbox and loads the piomail and piomailattach.
+#sending mail - start Pio_sendmail with parameters of:
+#snmphost, snmpuser, snmppass, sqldb, sqluser, sqlhost
+#it sends all mail in piosendmail, once the mail is sent
+#it sets mail message status flag to 'S' for sent and deletes the records in piosendmail.
+#
+#there should be more than one entry of Pio_getmail as it may get mail from a 
+#variety of mailboxes to load into piomail; whereas, there will only be on 
+#running Pio_sendmail per db, as only one app needs to sendmail for the whole db.
+#
+
+create table piosendmail
+(piouser VARCHAR(25) NOT NULL,
+emailid int NOT NULL,
+emailto TEXT NOT NULL,
+emailfrom TEXT NOT NULL,
+emaildate DATETIME NOT NULL,
+subject VARCHAR(150) NOT NULL,
+body TEXT NOT NULL,
+PRIMARY KEY (piouser, emailid),
+INDEX piosendemail1 (piouser, emailid)
+);
+
+
+#pioclasstable authorizations for the mail tables.
+insert into pioclasstable values('pioadmin', 'piomailattach', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('pioadmin', 'piomail', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('pioadmin', 'piouser_mailbox', 'F', 'F', 'F', 'F'); 
+insert into pioclasstable values('pioadmin', 'piouser_mailaddy', 'F', 'F', 'F', 'F'); 
+
+#insert into pioclasstable values('#SOMEUSER#', 'piomailattach', 'R', 'R', 'R', 'R'); 
+#insert into pioclasstable values('#SOMEUSER#', 'piomail', 'R', 'R', 'R', 'R'); 
+#insert into pioclasstable values('#SOMEUSER#', 'piouser_mailbox', 'R', 'R', 'R', 'R'); 
+
+
+#---------------pio Testing/Example Tables--------------------------------
+
+create table piotest
+(testno int NOT NULL,
+testdata1 varchar(132) NOT NULL,
+testdata2 varchar(132),
+primary key (testno),
+index piotest1 (testno),
+index piotest2 (testdata1, testno))
+;
+
+insert into piotest values(1, "Norwegian Blue", "this parrot's not dead!");
+insert into piotest values(10, "the Black Knight", "It's only a flesh wound.");
+insert into piotest values(11, "I am Arthur, King of the Britons!", "Who 'er the Britons?");
+
+
+create table piotestblob
+(blobname varchar(100) NOT NULL,
+theblob BLOB NOT NULL,
+mimeinfo VARCHAR(255) NOT NULL,
+primary key (blobname)
+);
+
